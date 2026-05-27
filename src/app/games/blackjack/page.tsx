@@ -1,4 +1,5 @@
 import Link from "next/link";
+import BlackjackGame from "./BlackjackGame";
 
 export default function BlackjackPage() {
   return (
@@ -33,16 +34,7 @@ export default function BlackjackPage() {
               In Development
             </p>
           </div>
-
-          <div className="mt-12 flex min-h-72 items-center justify-center rounded-3xl border border-dashed border-neutral-700 bg-neutral-950">
-            <div className="max-w-md px-6 text-center">
-              <p className="text-xl font-semibold">Game Area Coming Soon</p>
-              <p className="mt-4 leading-7 text-neutral-400">
-                This section will eventually contain the playable Blackjack
-                table, cards, player controls, and score display.
-              </p>
-            </div>
-          </div>
+          <BlackjackGame />
         </div>
       </section>
     </main>
