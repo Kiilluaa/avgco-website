@@ -1,18 +1,20 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-neutral-950 text-white">
       <nav className="border-b border-neutral-800 bg-neutral-950/90">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-          <h1 className="text-2xl font-bold tracking-wide">AVGCO</h1>
+          <h1 className="text-2xl font-bold tracking-wide"><Link href="/">AVGCO</Link></h1>
 
           <div className="hidden gap-8 text-sm text-neutral-300 sm:flex">
-            <span className="transition hover:text-white">Games</span>
-            <span className="transition hover:text-white">Account</span>
+            <Link href="/games" className="transition hover:text-white">Games</Link>
+            <Link href="/account" className="transition hover:text-white">Account</Link>
           </div>
 
-          <button className="rounded-full border border-neutral-700 px-4 py-2 text-sm text-neutral-200 transition hover:border-neutral-400 hover:text-white">
+          <Link href="/account" className="rounded-full border border-neutral-700 px-4 py-2 text-sm text-neutral-200 transition hover:border-neutral-400 hover:text-white">
             Sign In
-          </button>
+          </Link>
         </div>
       </nav>
 
@@ -31,9 +33,9 @@ export default function Home() {
         </p>
 
         <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-          <button className="rounded-full bg-white px-7 py-3 font-medium text-neutral-950 transition hover:bg-neutral-200">
+          <Link href="/games" className="rounded-full bg-white px-7 py-3 font-medium text-neutral-950 transition hover:bg-neutral-200">
             Browse Games
-          </button>
+          </Link>
 
           <button className="rounded-full border border-neutral-700 px-7 py-3 font-medium text-white transition hover:border-neutral-400">
             Coming Soon
