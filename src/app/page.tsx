@@ -1,52 +1,95 @@
-import Image from "next/image";
-
 export default function Home() {
-	return (
-		<div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-			<main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-				<Image className="dark:invert" src="/next.svg" alt="Next.js logo" width={180} height={38} priority />
-				<ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-					<li className="mb-2 tracking-[-.01em]">
-						Get started by editing{" "}
-						<code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-							src/app/page.tsx
-						</code>
-						.
-					</li>
-					<li className="tracking-[-.01em]">Save and see your changes instantly.</li>
-				</ol>
+  return (
+    <main className="min-h-screen bg-neutral-950 text-white">
+      <nav className="border-b border-neutral-800 bg-neutral-950/90">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+          <h1 className="text-2xl font-bold tracking-wide">AVGCO</h1>
 
-				<div className="flex gap-4 items-center flex-col sm:flex-row">
-					<a
-						className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-						href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						Read our docs
-					</a>
-				</div>
-			</main>
-			<footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-				<a
-					className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-					href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<Image aria-hidden src="/file.svg" alt="File icon" width={16} height={16} />
-					Learn
-				</a>
-				<a
-					className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-					href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<Image aria-hidden src="/globe.svg" alt="Globe icon" width={16} height={16} />
-					Go to nextjs.org →
-				</a>
-			</footer>
-		</div>
-	);
+          <div className="hidden gap-8 text-sm text-neutral-300 sm:flex">
+            <span className="transition hover:text-white">Games</span>
+            <span className="transition hover:text-white">Store</span>
+            <span className="transition hover:text-white">Account</span>
+          </div>
+
+          <button className="rounded-full border border-neutral-700 px-4 py-2 text-sm text-neutral-200 transition hover:border-neutral-400 hover:text-white">
+            Sign In
+          </button>
+        </div>
+      </nav>
+
+      <section className="mx-auto flex max-w-6xl flex-col items-center px-6 py-24 text-center">
+        <p className="mb-5 rounded-full border border-neutral-800 bg-neutral-900 px-4 py-2 text-sm text-neutral-300">
+          Games, stories, and future releases
+        </p>
+
+        <h2 className="max-w-4xl text-5xl font-bold tracking-tight sm:text-7xl">
+          A new home for games built by AVGCO.
+        </h2>
+
+        <p className="mt-7 max-w-2xl text-lg leading-8 text-neutral-400">
+          Play original browser games, save your progress, and explore new
+          releases as the platform grows.
+        </p>
+
+        <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+          <button className="rounded-full bg-white px-7 py-3 font-medium text-neutral-950 transition hover:bg-neutral-200">
+            Browse Games
+          </button>
+
+          <button className="rounded-full border border-neutral-700 px-7 py-3 font-medium text-white transition hover:border-neutral-400">
+            Coming Soon
+          </button>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-6 pb-24">
+        <div className="mb-10 flex items-end justify-between">
+          <div>
+            <p className="text-sm uppercase tracking-[0.25em] text-neutral-500">
+              Platform
+            </p>
+            <h3 className="mt-3 text-3xl font-semibold">
+              What is being built
+            </h3>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-3">
+          <article className="rounded-3xl border border-neutral-800 bg-neutral-900 p-7">
+            <p className="mb-4 text-sm text-neutral-500">01</p>
+            <h4 className="text-xl font-semibold">Games Library</h4>
+            <p className="mt-4 leading-7 text-neutral-400">
+              A growing collection of playable browser games, beginning with
+              smaller games and expanding into 2D story experiences.
+            </p>
+          </article>
+
+          <article className="rounded-3xl border border-neutral-800 bg-neutral-900 p-7">
+            <p className="mb-4 text-sm text-neutral-500">02</p>
+            <h4 className="text-xl font-semibold">Player Accounts</h4>
+            <p className="mt-4 leading-7 text-neutral-400">
+              Accounts will allow players to keep progress, achievements, and
+              game-specific save data across the platform.
+            </p>
+          </article>
+
+          <article className="rounded-3xl border border-neutral-800 bg-neutral-900 p-7">
+            <p className="mb-4 text-sm text-neutral-500">03</p>
+            <h4 className="text-xl font-semibold">Future Store</h4>
+            <p className="mt-4 leading-7 text-neutral-400">
+              A future space for AVGCO clothing, releases, and other products
+              connected to the brand.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <footer className="border-t border-neutral-800 px-6 py-8">
+        <div className="mx-auto flex max-w-6xl flex-col justify-between gap-3 text-sm text-neutral-500 sm:flex-row">
+          <p>© 2026 AVGCO. All rights reserved.</p>
+          <p>Platform currently in development.</p>
+        </div>
+      </footer>
+    </main>
+  );
 }
