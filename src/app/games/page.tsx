@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function GamesPage() {
   return (
     <main className="flex-1 bg-neutral-950 text-white">
@@ -15,7 +17,9 @@ export default function GamesPage() {
                     <p className="mt-4 max-w-xl leading-7 text-neutral-400">
                         This will be an originally made version of the classic game Blackjack.
                     </p>
-                    <button className="mt-8 rounded-full border border-neutral-700 px-5 py-2.5 text-sm text-neutral-400">Coming Soon</button>
+                    <Link href="/games/blackjack" className="mt-8 inline-block rounded-full border border-neutral-700 px-5 py-2.5 text-sm text-neutral-300 transition hover:border-neutral-400 hover:text-white">
+                        View Game
+                    </Link>
                 </article>
             </div>
         </section>
