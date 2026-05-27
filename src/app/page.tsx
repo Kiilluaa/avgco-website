@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-neutral-950 text-white">
+    <main className="flex-1 bg-neutral-950 text-white">
       <section className="mx-auto flex max-w-6xl flex-col items-center px-6 py-24 text-center">
         <p className="mb-5 rounded-full border border-neutral-800 bg-neutral-900 px-4 py-2 text-sm text-neutral-300">
           Games, stories, and future releases
@@ -69,13 +69,6 @@ export default function Home() {
           </article>
         </div>
       </section>
-
-      <footer className="border-t border-neutral-800 px-6 py-8">
-        <div className="mx-auto flex max-w-6xl flex-col justify-between gap-3 text-sm text-neutral-500 sm:flex-row">
-          <p>© 2026 AVGCO. All rights reserved.</p>
-          <p>Platform currently in development.</p>
-        </div>
-      </footer>
     </main>
   );
 }

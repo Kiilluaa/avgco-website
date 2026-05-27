@@ -1,6 +1,6 @@
 export default function AccountPage() {
   return (
-    <main className="min-h-screen bg-neutral-950 text-white">
+    <main className="flex-1 bg-neutral-950 text-white">
         <section className="mx-auto max-w-6xl px-6 py-20">
             <p className="text-sm uppercase tracking-[0.25em] text-neutral-500">Account</p>
             <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">Your profile</h1>
