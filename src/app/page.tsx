@@ -7,7 +7,6 @@ export default function Home() {
 
           <div className="hidden gap-8 text-sm text-neutral-300 sm:flex">
             <span className="transition hover:text-white">Games</span>
-            <span className="transition hover:text-white">Store</span>
             <span className="transition hover:text-white">Account</span>
           </div>
 
@@ -75,7 +74,7 @@ export default function Home() {
 
           <article className="rounded-3xl border border-neutral-800 bg-neutral-900 p-7">
             <p className="mb-4 text-sm text-neutral-500">03</p>
-            <h4 className="text-xl font-semibold">Future Store</h4>
+            <h4 className="text-xl font-semibold">New Releases</h4>
             <p className="mt-4 leading-7 text-neutral-400">
               A future space for AVGCO clothing, releases, and other products
               connected to the brand.
