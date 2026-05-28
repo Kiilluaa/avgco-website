@@ -362,7 +362,7 @@ export default function SudokuGame() {
       </div>
 
       <div className="mt-8 flex flex-col items-center gap-8 xl:flex-row xl:items-start xl:justify-center">
-        <div className="grid w-full max-w-[27rem] grid-cols-9 border-2 border-neutral-300 bg-neutral-300">
+        <div className="grid w-full max-w-108 grid-cols-9 border-2 border-neutral-300 bg-neutral-300">
           {grid.map((row, rowIndex) =>
             row.map((value, columnIndex) => {
               const startingCell =
