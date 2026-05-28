@@ -322,7 +322,7 @@ export default function SudokuGame() {
   }, [enterNumber]);
 
   return (
-    <div className="mt-12 rounded-3xl border border-neutral-800 bg-neutral-950 p-5 sm:p-8">
+    <div className="mt-8 rounded-3xl border border-neutral-800 bg-neutral-950 p-3 sm:mt-12 sm:p-8">
       <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
         <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
           <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">
@@ -362,7 +362,7 @@ export default function SudokuGame() {
       </div>
 
       <div className="mt-8 flex flex-col items-center gap-8 xl:flex-row xl:items-start xl:justify-center">
-        <div className="grid grid-cols-9 border-2 border-neutral-300 bg-neutral-300">
+        <div className="grid w-full max-w-[27rem] grid-cols-9 border-2 border-neutral-300 bg-neutral-300">
           {grid.map((row, rowIndex) =>
             row.map((value, columnIndex) => {
               const startingCell =
@@ -397,7 +397,7 @@ export default function SudokuGame() {
                     }
                   }}
                   disabled={!activePuzzle}
-                  className={`flex h-10 w-10 items-center justify-center bg-neutral-800 text-lg transition hover:bg-neutral-700 sm:h-12 sm:w-12 ${
+                  className={`flex aspect-square w-full items-center justify-center bg-neutral-800 text-base transition hover:bg-neutral-700 sm:text-lg ${
                     startingCell
                       ? "font-semibold text-white"
                       : "font-medium text-neutral-300"

@@ -12,7 +12,7 @@ export default function SudokuPage() {
           ← Back to Games
         </Link>
 
-        <div className="mt-10 rounded-3xl border border-neutral-800 bg-neutral-900 p-8 sm:p-12">
+        <div className="mt-10 rounded-3xl border border-neutral-800 bg-neutral-900 p-4 sm:p-8 lg:p-12">
           <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-start">
             <div>
               <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">
