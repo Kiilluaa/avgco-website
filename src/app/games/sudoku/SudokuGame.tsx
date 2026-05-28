@@ -354,9 +354,9 @@ export default function SudokuGame() {
             }
             className="mt-3 block w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-sm text-white"
           >
-            <option value="Easy">Easy - More clues</option>
-            <option value="Medium">Medium - Balanced</option>
-            <option value="Hard">Hard - Fewer clues</option>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
           </select>
         </div>
       </div>
