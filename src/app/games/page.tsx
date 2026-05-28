@@ -15,7 +15,7 @@ export default function GamesPage() {
                     </div>
                     <h2 className="mt-8 text-2xl font-semibold">Blackjack</h2>
                     <p className="mt-4 max-w-xl leading-7 text-neutral-400">
-                        This will be an originally made version of the classic game Blackjack.
+                        Play the classic game of blackjack with a three deck shoe. Closest to 21 wins.
                     </p>
                     <Link href="/games/blackjack" className="mt-8 inline-block rounded-full border border-neutral-700 px-5 py-2.5 text-sm text-neutral-300 transition hover:border-neutral-400 hover:text-white">
                         View Game

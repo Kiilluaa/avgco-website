@@ -180,7 +180,7 @@ export default function BlackjackGame() {
   const [reshuffleAt, setReshuffleAt] = useState(52);
   const [shoeNumber, setShoeNumber] = useState(0);
   const [shoeMessage, setShoeMessage] = useState(
-    "A new 3-deck shoe will be shuffled when you begin."
+    "A new 3 deck shoe will be shuffled when you begin."
   );
   const [result, setResult] = useState(
     "Deal the cards when you are ready to play."
@@ -212,7 +212,7 @@ export default function BlackjackGame() {
 
     if (startedNewShoe) {
       setShoeMessage(
-        `New 3-deck shoe shuffled. ${activeShoe.length} cards remain after the deal.`
+        `New 3 deck shoe shuffled. ${activeShoe.length} cards remain after the deal.`
       );
     } else {
       setShoeMessage(
@@ -305,7 +305,7 @@ export default function BlackjackGame() {
           </p>
 
           <p className="mt-3 text-lg font-medium text-white">
-            3-Deck Shoe {shoeNumber > 0 ? `#${shoeNumber}` : ""}
+            3 Deck Shoe {shoeNumber > 0 ? `#${shoeNumber}` : ""}
           </p>
 
           <p className="mt-2 text-sm leading-6 text-neutral-400">
@@ -328,9 +328,9 @@ export default function BlackjackGame() {
             disabled={status === "playing"}
             className="mt-3 block w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-sm text-white disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <option value={39}>Deep play — 39 cards left</option>
-            <option value={52}>Standard — 52 cards left</option>
-            <option value={78}>Early — 78 cards left</option>
+            <option value={39}>Deep play - 39 cards left</option>
+            <option value={52}>Standard - 52 cards left</option>
+            <option value={78}>Early - 78 cards left</option>
           </select>
 
           <p className="mt-3 max-w-xs text-sm leading-6 text-neutral-400">
@@ -352,7 +352,7 @@ export default function BlackjackGame() {
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold">Dealer</h2>
             <p className="text-neutral-400">
-              Score: {hideDealerCard ? "?" : dealerScore}
+              Total: {hideDealerCard ? "?" : dealerScore}
             </p>
           </div>
 
@@ -374,7 +374,7 @@ export default function BlackjackGame() {
         <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold">Player</h2>
-            <p className="text-neutral-400">Score: {playerScore}</p>
+            <p className="text-neutral-400">Total: {playerScore}</p>
           </div>
 
           <div className="mt-6 grid min-h-32 overflow-hidden pb-2" style={{ gridTemplateColumns: getHandGridColumns(playerHand.length) }}>

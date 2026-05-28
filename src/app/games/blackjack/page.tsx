@@ -24,7 +24,7 @@ export default function BlackjackPage() {
               </h1>
 
               <p className="mt-5 max-w-2xl text-lg leading-8 text-neutral-400">
-                An AVGCO version of the classic card game. The playable game,
+                Classic three deck blackjack. The playable game,
                 player statistics, and saved progress will be added here as
                 development continues.
               </p>
