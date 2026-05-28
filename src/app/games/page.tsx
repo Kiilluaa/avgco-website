@@ -7,8 +7,8 @@ export default function GamesPage() {
             <p className="text-sm uppercase tracking-[0.25em] text-neutral-500">Games</p>
             <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">Play the Average Company Games</h1>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-neutral-400">Explore original browser games as they are released.</p>
-            <div className="mt-12 grid gap-6">
-                <article className="rounded-3xl border border-neutral-800 bg-neutral-900 p-7">
+            <div className="mt-12 grid gap-6 md:grid-cols-2">
+                <article className="flex h-full flex-col rounded-3xl border border-neutral-800 bg-neutral-900 p-7">
                     <div className="flex items-center justify-between">
                         <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">Card Game</p>
                         <p className="rounded-full border border-neutral-700 px-3 py-1 text-sm text-neutral-300">In development</p>
@@ -17,9 +17,39 @@ export default function GamesPage() {
                     <p className="mt-4 max-w-xl leading-7 text-neutral-400">
                         Play the classic game of blackjack with a three deck shoe. Closest to 21 wins.
                     </p>
-                    <Link href="/games/blackjack" className="mt-8 inline-block rounded-full border border-neutral-700 px-5 py-2.5 text-sm text-neutral-300 transition hover:border-neutral-400 hover:text-white">
-                        View Game
-                    </Link>
+                    <div className="mt-auto pt-8">
+                        <Link href="/games/blackjack" className="mt-8 inline-block rounded-full border border-neutral-700 px-5 py-2.5 text-sm text-neutral-300 transition hover:border-neutral-400 hover:text-white">
+                            View Game
+                        </Link>
+                    </div>
+                </article>
+
+                <article className="flex h-full flex-col rounded-3xl border border-neutral-800 bg-neutral-900 p-7">
+                    <div className="flex items-center justify-between">
+                        <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">
+                            Puzzle Game
+                        </p>
+
+                        <p className="rounded-full border border-neutral-700 px-3 py-1 text-sm text-neutral-300">
+                            Playable
+                        </p>
+                    </div>
+
+                    <h2 className="mt-8 text-2xl font-semibold">Sudoku</h2>
+
+                    <p className="mt-4 max-w-xl leading-7 text-neutral-400">
+                        A Sudoku experience with multiple difficulty levels.
+                        Soon will have puzzle completion tracking, and player statistics.
+                    </p>
+
+                    <div className="mt-auto pt-8">
+                        <Link
+                            href="/games/sudoku"
+                            className="inline-block rounded-full border border-neutral-700 px-5 py-2.5 text-sm text-neutral-300 transition hover:border-neutral-400 hover:text-white"
+                        >
+                            View Game
+                        </Link>
+                    </div>
                 </article>
             </div>
         </section>

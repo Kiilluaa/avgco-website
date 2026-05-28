@@ -9,12 +9,12 @@ export default function Home() {
         </p>
 
         <h2 className="max-w-4xl text-5xl font-bold tracking-tight sm:text-7xl">
-          A new home for games built by THEAVGCO.
+          A new home for games built by THEAVGCO
         </h2>
 
         <p className="mt-7 max-w-2xl text-lg leading-8 text-neutral-400">
           Play original browser games, save your progress, and explore new
-          releases as the platform grows.
+          releases as the platform grows
         </p>
 
         <div className="mt-10 flex flex-col gap-4 sm:flex-row">
