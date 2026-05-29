@@ -272,6 +272,15 @@ export default function SudokuGame() {
       : []
   );
 
+  const selectedValue = selectedCell
+    ? grid[selectedCell[0]][selectedCell[1]]
+    : 0;
+
+  const selectedIsEditable =
+    selectedCell !== null &&
+    activePuzzle !== null &&
+    activePuzzle.startingGrid[selectedCell[0]][selectedCell[1]] === 0;
+
   function preparePuzzle(selectedDifficulty: Difficulty) {
     setDifficulty(selectedDifficulty);
     setGameStatus("ready");
@@ -396,64 +405,70 @@ export default function SudokuGame() {
 
   return (
     <div className="mt-8 rounded-3xl border border-neutral-800 bg-neutral-950 p-3 sm:mt-12 sm:p-8">
-      <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
-        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
-          <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">
-            Puzzle Status
-          </p>
-
-          <p className="mt-3 text-lg font-medium text-white">{message}</p>
-
-          <div className="mt-4 flex flex-wrap gap-6 text-sm">
-            <p className="text-neutral-400">
-              Time:{" "}
-              <span className="font-medium text-white">
-                {formatTime(elapsedSeconds)}
-              </span>
+      <div>
+        <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
+          <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+            <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">
+              Puzzle Status
             </p>
 
-            <p className="text-neutral-400">
-              Mistakes:{" "}
-              <span className="font-medium text-white">{mistakes}</span>
-            </p>
+            <p className="mt-3 text-lg font-medium text-white">{message}</p>
+          </div>
 
-            {activePuzzle && (
-              <p className="text-neutral-400">
-                Starting numbers:{" "}
-                <span className="font-medium text-white">
-                  {activePuzzle.clueCount}
-                </span>
-              </p>
-            )}
+          <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+            <label
+              htmlFor="difficulty"
+              className="text-sm uppercase tracking-[0.2em] text-neutral-500"
+            >
+              Difficulty
+            </label>
+
+            <select
+              id="difficulty"
+              value={difficulty}
+              onChange={(event) =>
+                preparePuzzle(event.target.value as Difficulty)
+              }
+              className="mt-3 block w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-sm text-white"
+            >
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+              <option value="Hard">Hard</option>
+            </select>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
-          <label
-            htmlFor="difficulty"
-            className="text-sm uppercase tracking-[0.2em] text-neutral-500"
-          >
-            Difficulty
-          </label>
+        <div className="mt-4 grid grid-cols-3 gap-3">
+          <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-4 text-center">
+            <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">
+              Time
+            </p>
+            <p className="mt-2 text-xl font-semibold text-white">
+              {formatTime(elapsedSeconds)}
+            </p>
+          </div>
 
-          <select
-            id="difficulty"
-            value={difficulty}
-            onChange={(event) =>
-              preparePuzzle(event.target.value as Difficulty)
-            }
-            className="mt-3 block w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-sm text-white"
-          >
-            <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
-            <option value="Hard">Hard</option>
-          </select>
+          <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-4 text-center">
+            <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">
+              Mistakes
+            </p>
+            <p className="mt-2 text-xl font-semibold text-white">{mistakes}</p>
+          </div>
+
+          <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-4 text-center">
+            <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">
+              Clues
+            </p>
+            <p className="mt-2 text-xl font-semibold text-white">
+              {activePuzzle ? activePuzzle.clueCount : "--"}
+            </p>
+          </div>
         </div>
       </div>
 
       <div className="mt-8 flex flex-col items-center gap-8 xl:flex-row xl:items-start xl:justify-center">
         <div className="relative w-full max-w-108">
-          <div className="grid w-full grid-cols-9 border-2 border-neutral-300 bg-neutral-300">
+          <div className="grid w-full grid-cols-9 border-2 border-neutral-200 bg-neutral-200">
             {grid.map((row, rowIndex) =>
               row.map((value, columnIndex) => {
                 const startingCell =
@@ -469,36 +484,62 @@ export default function SudokuGame() {
                   !startingCell &&
                   value !== activePuzzle.solution[rowIndex][columnIndex];
 
+                const sameRow =
+                  selectedCell !== null && selectedCell[0] === rowIndex;
+
+                const sameColumn =
+                  selectedCell !== null && selectedCell[1] === columnIndex;
+
+                const sameBox =
+                  selectedCell !== null &&
+                  Math.floor(selectedCell[0] / 3) === Math.floor(rowIndex / 3) &&
+                  Math.floor(selectedCell[1] / 3) === Math.floor(columnIndex / 3);
+
+                const relatedToSelected = sameRow || sameColumn || sameBox;
+
+                const matchesSelectedNumber =
+                  selectedValue !== 0 && value !== 0 && value === selectedValue;
+
+                const backgroundStyle = selected
+                  ? "bg-cyan-700/60 ring-2 ring-inset ring-cyan-300"
+                  : matchesSelectedNumber
+                    ? "bg-cyan-800/70"
+                    : relatedToSelected
+                      ? "bg-slate-800"
+                      : "bg-neutral-800";
+
+                const textStyle = incorrect
+                  ? "font-medium text-red-400"
+                  : startingCell
+                    ? "font-semibold text-white"
+                    : value !== 0
+                      ? "font-medium text-cyan-300"
+                      : "font-medium text-neutral-300";
+
                 const rightBorder =
                   columnIndex === 2 || columnIndex === 5
-                    ? "border-r-2 border-r-neutral-300"
+                    ? "border-r-2 border-r-neutral-200"
                     : "border-r border-r-neutral-700";
 
                 const bottomBorder =
                   rowIndex === 2 || rowIndex === 5
-                    ? "border-b-2 border-b-neutral-300"
+                    ? "border-b-2 border-b-neutral-200"
                     : "border-b border-b-neutral-700";
 
                 return (
                   <button
                     key={`${rowIndex}-${columnIndex}`}
                     onClick={() => {
-                      if (
-                        !startingCell &&
-                        activePuzzle &&
-                        gameStatus === "playing"
-                      ) {
+                      if (activePuzzle && gameStatus === "playing") {
                         setSelectedCell([rowIndex, columnIndex]);
                       }
                     }}
                     disabled={gameStatus !== "playing"}
-                    className={`flex aspect-square w-full items-center justify-center bg-neutral-800 text-base transition hover:bg-neutral-700 disabled:cursor-default sm:text-lg ${
-                      startingCell
-                        ? "font-semibold text-white"
-                        : "font-medium text-neutral-300"
-                    } ${selected ? "ring-2 ring-inset ring-white" : ""} ${
-                      incorrect ? "text-red-400" : ""
-                    } ${rightBorder} ${bottomBorder}`}
+                    className={`flex aspect-square w-full items-center justify-center text-base transition-colors sm:text-lg ${
+                      gameStatus === "playing"
+                        ? "hover:bg-cyan-700/50"
+                        : "disabled:cursor-default"
+                    } ${backgroundStyle} ${textStyle} ${rightBorder} ${bottomBorder}`}
                   >
                     {value === 0 ? "" : value}
                   </button>
@@ -521,7 +562,7 @@ export default function SudokuGame() {
           )}
         </div>
 
-        <div className="w-full max-w-sm rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
+        <div className="flex w-full max-w-108 flex-col rounded-2xl border border-neutral-800 bg-neutral-900 p-5 xl:h-108">
           <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">
             Number Pad
           </p>
@@ -535,18 +576,22 @@ export default function SudokuGame() {
                   key={number}
                   onClick={() => enterNumber(number)}
                   disabled={
-                    !selectedCell ||
+                    !selectedIsEditable ||
                     gameStatus !== "playing" ||
                     !activePuzzle ||
                     numberComplete
                   }
-                  className={`rounded-xl border px-4 py-3 text-lg font-medium transition ${
+                  className={`relative overflow-hidden rounded-xl border px-4 py-2.5 text-lg font-medium transition ${
                     numberComplete
-                      ? "cursor-not-allowed border-neutral-800 bg-neutral-800 text-neutral-500 line-through"
-                      : "border-neutral-700 bg-neutral-950 text-white hover:border-neutral-400 disabled:cursor-not-allowed disabled:opacity-40"
+                      ? "cursor-not-allowed border-neutral-500 bg-neutral-700 text-neutral-400"
+                      : "border-cyan-500/60 bg-neutral-950 text-cyan-100 hover:border-cyan-300 hover:bg-cyan-500/15 active:border-cyan-300 active:bg-cyan-500 active:text-neutral-950 disabled:cursor-not-allowed disabled:border-neutral-700 disabled:text-neutral-500 disabled:opacity-60 disabled:hover:bg-neutral-950"
                   }`}
                 >
-                  {number}
+                  <span>{number}</span>
+
+                  {numberComplete && (
+                    <span className="absolute left-1/2 top-1/2 h-px w-[140%] -translate-x-1/2 -translate-y-1/2 -rotate-45 bg-red-400" />
+                  )}
                 </button>
               );
             })}
@@ -555,25 +600,25 @@ export default function SudokuGame() {
           <button
             onClick={() => enterNumber(0)}
             disabled={
-              !selectedCell || gameStatus !== "playing" || !activePuzzle
+              !selectedIsEditable || gameStatus !== "playing" || !activePuzzle
             }
-            className="mt-3 w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-sm text-neutral-300 transition hover:border-neutral-400 disabled:cursor-not-allowed disabled:opacity-40"
+            className="mt-3 w-full rounded-xl border border-cyan-500/60 bg-neutral-950 px-4 py-2.5 text-sm font-medium text-cyan-100 transition hover:border-cyan-300 hover:bg-cyan-500/15 active:border-cyan-300 active:bg-cyan-500 active:text-neutral-950 disabled:cursor-not-allowed disabled:border-neutral-700 disabled:text-neutral-500 disabled:opacity-60 disabled:hover:bg-neutral-950"
           >
             Erase
           </button>
 
-          <div className="mt-6 flex gap-3">
+          <div className="mt-auto flex gap-3 pt-5">
             <button
               onClick={resetPuzzle}
               disabled={!activePuzzle}
-              className="flex-1 rounded-full border border-neutral-700 px-4 py-2.5 text-sm text-neutral-300 transition hover:border-neutral-400 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex-1 rounded-full border border-amber-500/60 bg-amber-500/10 px-4 py-2.5 text-sm font-medium text-amber-200 transition hover:border-amber-400 hover:bg-amber-500/20 active:scale-[0.98] active:border-amber-300 active:bg-amber-500/35 disabled:cursor-not-allowed disabled:border-neutral-700 disabled:bg-transparent disabled:text-neutral-500 disabled:opacity-60"
             >
               Reset Puzzle
             </button>
 
             <button
               onClick={() => preparePuzzle(difficulty)}
-              className="flex-1 rounded-full bg-white px-4 py-2.5 text-sm font-medium text-neutral-950 transition hover:bg-neutral-200"
+              className="flex-1 rounded-full bg-linear-to-r from-blue-500 via-blue-600 to-blue-700 px-4 py-2.5 text-sm font-medium text-white shadow-lg shadow-blue-500/40 transition hover:bg-linear-to-br focus:outline-none focus:ring-2 focus:ring-blue-300"
             >
               New Puzzle
             </button>
