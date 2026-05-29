@@ -11,15 +11,21 @@ export default function GamesPage() {
                 <article className="flex h-full flex-col rounded-3xl border border-neutral-800 bg-neutral-900 p-7">
                     <div className="flex items-center justify-between">
                         <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">Card Game</p>
-                        <p className="rounded-full border border-neutral-700 px-3 py-1 text-sm text-neutral-300">In development</p>
+                        <p className="rounded-full border border-neutral-700 px-3 py-1 text-sm text-neutral-300">Playable</p>
                     </div>
                     <h2 className="mt-8 text-2xl font-semibold">Blackjack</h2>
                     <p className="mt-4 max-w-xl leading-7 text-neutral-400">
-                        Play the classic game of blackjack with a three deck shoe. Closest to 21 wins.
+                        Play the classic game of blackjack with a three deck shoe. Closest to 21 wins. 
+                        More expected to be added soon.
                     </p>
                     <div className="mt-auto pt-8">
-                        <Link href="/games/blackjack" className="mt-8 inline-block rounded-full border border-neutral-700 px-5 py-2.5 text-sm text-neutral-300 transition hover:border-neutral-400 hover:text-white">
-                            View Game
+                        <Link
+                            href="/games/blackjack"
+                            className="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-linear-to-br from-purple-600 to-blue-500 p-0.5 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        >
+                            <span className="relative rounded-full bg-neutral-900 px-5 py-2.5 transition-all duration-200 group-hover:bg-transparent">
+                                Play
+                            </span>
                         </Link>
                     </div>
                 </article>
@@ -38,16 +44,18 @@ export default function GamesPage() {
                     <h2 className="mt-8 text-2xl font-semibold">Sudoku</h2>
 
                     <p className="mt-4 max-w-xl leading-7 text-neutral-400">
-                        A Sudoku experience with multiple difficulty levels.
-                        Soon will have puzzle completion tracking, and player statistics.
+                        Play Sudoku with multiple difficulty levels.
+                        More expected to be added soon.
                     </p>
 
                     <div className="mt-auto pt-8">
                         <Link
                             href="/games/sudoku"
-                            className="inline-block rounded-full border border-neutral-700 px-5 py-2.5 text-sm text-neutral-300 transition hover:border-neutral-400 hover:text-white"
+                            className="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-linear-to-br from-purple-600 to-blue-500 p-0.5 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
                         >
-                            View Game
+                            <span className="relative rounded-full bg-neutral-900 px-5 py-2.5 transition-all duration-200 group-hover:bg-transparent">
+                                Play
+                            </span>
                         </Link>
                     </div>
                 </article>
