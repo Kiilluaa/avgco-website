@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 type Difficulty = "Easy" | "Medium" | "Hard";
-type Grid = number[];
+type GameStatus = "ready" | "playing" | "completed";
 
 type Puzzle = {
   difficulty: Difficulty;
@@ -56,7 +56,6 @@ function shuffleArray<T>(items: T[]): T[] {
 function createSolvedGrid(): number[][] {
   const base = 3;
   const side = base * base;
-
   const groups = [0, 1, 2];
 
   const rows = shuffleArray(groups).flatMap((group) =>
@@ -183,7 +182,6 @@ function generatePuzzle(difficulty: Difficulty): Puzzle {
       }
 
       const removedValue = startingGrid[location.row][location.column];
-
       startingGrid[location.row][location.column] = 0;
 
       const remainingSolutionCount = countSolutions(copyGrid(startingGrid));
@@ -222,26 +220,82 @@ function isPuzzleComplete(grid: number[][], solution: number[][]): boolean {
   );
 }
 
+function formatTime(totalSeconds: number): string {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${minutes.toString().padStart(2, "0")}:${seconds
+    .toString()
+    .padStart(2, "0")}`;
+}
+
+function isNumberComplete(
+  number: number,
+  grid: number[][],
+  solution: number[][]
+): boolean {
+  let correctPlacements = 0;
+
+  for (let row = 0; row < 9; row++) {
+    for (let column = 0; column < 9; column++) {
+      if (
+        grid[row][column] === number &&
+        solution[row][column] === number
+      ) {
+        correctPlacements++;
+      }
+    }
+  }
+
+  return correctPlacements === 9;
+}
+
 export default function SudokuGame() {
   const [difficulty, setDifficulty] = useState<Difficulty>("Easy");
+  const [gameStatus, setGameStatus] = useState<GameStatus>("ready");
   const [activePuzzle, setActivePuzzle] = useState<Puzzle | null>(null);
   const [grid, setGrid] = useState<number[][]>(createEmptyGrid);
   const [selectedCell, setSelectedCell] = useState<[number, number] | null>(
     null
   );
-  const [message, setMessage] = useState("Generating a new puzzle...");
-  const [completed, setCompleted] = useState(false);
+  const [message, setMessage] = useState(
+    "Choose your difficulty, then press Play."
+  );
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [mistakes, setMistakes] = useState(0);
 
-  function loadPuzzle(selectedDifficulty: Difficulty) {
+  const completedNumbers = new Set<number>(
+    activePuzzle
+      ? [1, 2, 3, 4, 5, 6, 7, 8, 9].filter((number) =>
+          isNumberComplete(number, grid, activePuzzle.solution)
+        )
+      : []
+  );
+
+  function preparePuzzle(selectedDifficulty: Difficulty) {
+    setDifficulty(selectedDifficulty);
+    setGameStatus("ready");
+    setActivePuzzle(null);
+    setGrid(createEmptyGrid());
+    setSelectedCell(null);
+    setElapsedSeconds(0);
+    setMistakes(0);
+    setMessage(
+      `Ready to begin a ${selectedDifficulty} puzzle. Press Play.`
+    );
+  }
+
+  function startPuzzle() {
     setMessage("Generating a new puzzle...");
 
-    const nextPuzzle = generatePuzzle(selectedDifficulty);
+    const nextPuzzle = generatePuzzle(difficulty);
 
-    setDifficulty(selectedDifficulty);
     setActivePuzzle(nextPuzzle);
     setGrid(copyGrid(nextPuzzle.startingGrid));
     setSelectedCell(null);
-    setCompleted(false);
+    setElapsedSeconds(0);
+    setMistakes(0);
+    setGameStatus("playing");
     setMessage("Select an empty square and choose a number.");
   }
 
@@ -252,13 +306,19 @@ export default function SudokuGame() {
 
     setGrid(copyGrid(activePuzzle.startingGrid));
     setSelectedCell(null);
-    setCompleted(false);
+    setElapsedSeconds(0);
+    setMistakes(0);
+    setGameStatus("playing");
     setMessage("Puzzle reset. Select an empty square to continue.");
   }
 
   const enterNumber = useCallback(
     (value: number) => {
-      if (!selectedCell || !activePuzzle || completed) {
+      if (
+        !selectedCell ||
+        !activePuzzle ||
+        gameStatus !== "playing"
+      ) {
         return;
       }
 
@@ -268,8 +328,14 @@ export default function SudokuGame() {
         return;
       }
 
-      const updatedGrid = copyGrid(grid);
+      if (
+        value !== 0 &&
+        isNumberComplete(value, grid, activePuzzle.solution)
+      ) {
+        return;
+      }
 
+      const updatedGrid = copyGrid(grid);
       updatedGrid[row][column] = value;
 
       setGrid(updatedGrid);
@@ -280,28 +346,35 @@ export default function SudokuGame() {
       }
 
       if (value !== activePuzzle.solution[row][column]) {
+        setMistakes((currentMistakes) => currentMistakes + 1);
         setMessage("That number is incorrect. Try again.");
         return;
       }
 
       if (isPuzzleComplete(updatedGrid, activePuzzle.solution)) {
-        setCompleted(true);
+        setGameStatus("completed");
         setMessage(`Completed! You solved the ${difficulty} puzzle.`);
         return;
       }
 
       setMessage("Correct entry. Keep going.");
     },
-    [activePuzzle, completed, difficulty, grid, selectedCell]
+    [activePuzzle, difficulty, gameStatus, grid, selectedCell]
   );
 
   useEffect(() => {
-    const initialPuzzle = generatePuzzle("Easy");
+    if (gameStatus !== "playing") {
+      return;
+    }
 
-    setActivePuzzle(initialPuzzle);
-    setGrid(copyGrid(initialPuzzle.startingGrid));
-    setMessage("Select an empty square and choose a number.");
-  }, []);
+    const timerId = window.setInterval(() => {
+      setElapsedSeconds((currentSeconds) => currentSeconds + 1);
+    }, 1000);
+
+    return () => {
+      window.clearInterval(timerId);
+    };
+  }, [gameStatus]);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -331,11 +404,28 @@ export default function SudokuGame() {
 
           <p className="mt-3 text-lg font-medium text-white">{message}</p>
 
-          {activePuzzle && (
-            <p className="mt-2 text-sm text-neutral-400">
-              {difficulty} puzzle · {activePuzzle.clueCount} starting numbers
+          <div className="mt-4 flex flex-wrap gap-6 text-sm">
+            <p className="text-neutral-400">
+              Time:{" "}
+              <span className="font-medium text-white">
+                {formatTime(elapsedSeconds)}
+              </span>
             </p>
-          )}
+
+            <p className="text-neutral-400">
+              Mistakes:{" "}
+              <span className="font-medium text-white">{mistakes}</span>
+            </p>
+
+            {activePuzzle && (
+              <p className="text-neutral-400">
+                Starting numbers:{" "}
+                <span className="font-medium text-white">
+                  {activePuzzle.clueCount}
+                </span>
+              </p>
+            )}
+          </div>
         </div>
 
         <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
@@ -350,7 +440,7 @@ export default function SudokuGame() {
             id="difficulty"
             value={difficulty}
             onChange={(event) =>
-              loadPuzzle(event.target.value as Difficulty)
+              preparePuzzle(event.target.value as Difficulty)
             }
             className="mt-3 block w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-sm text-white"
           >
@@ -362,53 +452,72 @@ export default function SudokuGame() {
       </div>
 
       <div className="mt-8 flex flex-col items-center gap-8 xl:flex-row xl:items-start xl:justify-center">
-        <div className="grid w-full max-w-108 grid-cols-9 border-2 border-neutral-300 bg-neutral-300">
-          {grid.map((row, rowIndex) =>
-            row.map((value, columnIndex) => {
-              const startingCell =
-                activePuzzle?.startingGrid[rowIndex][columnIndex] !== 0;
+        <div className="relative w-full max-w-108">
+          <div className="grid w-full grid-cols-9 border-2 border-neutral-300 bg-neutral-300">
+            {grid.map((row, rowIndex) =>
+              row.map((value, columnIndex) => {
+                const startingCell =
+                  activePuzzle?.startingGrid[rowIndex][columnIndex] !== 0;
 
-              const selected =
-                selectedCell?.[0] === rowIndex &&
-                selectedCell?.[1] === columnIndex;
+                const selected =
+                  selectedCell?.[0] === rowIndex &&
+                  selectedCell?.[1] === columnIndex;
 
-              const incorrect =
-                activePuzzle !== null &&
-                value !== 0 &&
-                !startingCell &&
-                value !== activePuzzle.solution[rowIndex][columnIndex];
+                const incorrect =
+                  activePuzzle !== null &&
+                  value !== 0 &&
+                  !startingCell &&
+                  value !== activePuzzle.solution[rowIndex][columnIndex];
 
-              const rightBorder =
-                columnIndex === 2 || columnIndex === 5
-                  ? "border-r-2 border-r-neutral-300"
-                  : "border-r border-r-neutral-700";
+                const rightBorder =
+                  columnIndex === 2 || columnIndex === 5
+                    ? "border-r-2 border-r-neutral-300"
+                    : "border-r border-r-neutral-700";
 
-              const bottomBorder =
-                rowIndex === 2 || rowIndex === 5
-                  ? "border-b-2 border-b-neutral-300"
-                  : "border-b border-b-neutral-700";
+                const bottomBorder =
+                  rowIndex === 2 || rowIndex === 5
+                    ? "border-b-2 border-b-neutral-300"
+                    : "border-b border-b-neutral-700";
 
-              return (
-                <button
-                  key={`${rowIndex}-${columnIndex}`}
-                  onClick={() => {
-                    if (!startingCell && activePuzzle) {
-                      setSelectedCell([rowIndex, columnIndex]);
-                    }
-                  }}
-                  disabled={!activePuzzle}
-                  className={`flex aspect-square w-full items-center justify-center bg-neutral-800 text-base transition hover:bg-neutral-700 sm:text-lg ${
-                    startingCell
-                      ? "font-semibold text-white"
-                      : "font-medium text-neutral-300"
-                  } ${selected ? "ring-2 ring-inset ring-white" : ""} ${
-                    incorrect ? "text-red-400" : ""
-                  } ${rightBorder} ${bottomBorder}`}
-                >
-                  {value === 0 ? "" : value}
-                </button>
-              );
-            })
+                return (
+                  <button
+                    key={`${rowIndex}-${columnIndex}`}
+                    onClick={() => {
+                      if (
+                        !startingCell &&
+                        activePuzzle &&
+                        gameStatus === "playing"
+                      ) {
+                        setSelectedCell([rowIndex, columnIndex]);
+                      }
+                    }}
+                    disabled={gameStatus !== "playing"}
+                    className={`flex aspect-square w-full items-center justify-center bg-neutral-800 text-base transition hover:bg-neutral-700 disabled:cursor-default sm:text-lg ${
+                      startingCell
+                        ? "font-semibold text-white"
+                        : "font-medium text-neutral-300"
+                    } ${selected ? "ring-2 ring-inset ring-white" : ""} ${
+                      incorrect ? "text-red-400" : ""
+                    } ${rightBorder} ${bottomBorder}`}
+                  >
+                    {value === 0 ? "" : value}
+                  </button>
+                );
+              })
+            )}
+          </div>
+
+          {gameStatus === "ready" && (
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-neutral-400/45">
+              <button
+                onClick={startPuzzle}
+                className="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-linear-to-br from-purple-600 to-blue-500 p-0.5 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                <span className="relative rounded-full bg-neutral-950 px-8 py-3 transition-all duration-200 group-hover:bg-transparent">
+                  Play
+                </span>
+              </button>
+            </div>
           )}
         </div>
 
@@ -418,21 +527,36 @@ export default function SudokuGame() {
           </p>
 
           <div className="mt-5 grid grid-cols-3 gap-3">
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((number) => (
-              <button
-                key={number}
-                onClick={() => enterNumber(number)}
-                disabled={!selectedCell || completed || !activePuzzle}
-                className="rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-lg font-medium text-white transition hover:border-neutral-400 disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                {number}
-              </button>
-            ))}
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((number) => {
+              const numberComplete = completedNumbers.has(number);
+
+              return (
+                <button
+                  key={number}
+                  onClick={() => enterNumber(number)}
+                  disabled={
+                    !selectedCell ||
+                    gameStatus !== "playing" ||
+                    !activePuzzle ||
+                    numberComplete
+                  }
+                  className={`rounded-xl border px-4 py-3 text-lg font-medium transition ${
+                    numberComplete
+                      ? "cursor-not-allowed border-neutral-800 bg-neutral-800 text-neutral-500 line-through"
+                      : "border-neutral-700 bg-neutral-950 text-white hover:border-neutral-400 disabled:cursor-not-allowed disabled:opacity-40"
+                  }`}
+                >
+                  {number}
+                </button>
+              );
+            })}
           </div>
 
           <button
             onClick={() => enterNumber(0)}
-            disabled={!selectedCell || completed || !activePuzzle}
+            disabled={
+              !selectedCell || gameStatus !== "playing" || !activePuzzle
+            }
             className="mt-3 w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-sm text-neutral-300 transition hover:border-neutral-400 disabled:cursor-not-allowed disabled:opacity-40"
           >
             Erase
@@ -448,7 +572,7 @@ export default function SudokuGame() {
             </button>
 
             <button
-              onClick={() => loadPuzzle(difficulty)}
+              onClick={() => preparePuzzle(difficulty)}
               className="flex-1 rounded-full bg-white px-4 py-2.5 text-sm font-medium text-neutral-950 transition hover:bg-neutral-200"
             >
               New Puzzle
