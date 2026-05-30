@@ -263,6 +263,7 @@ export default function SudokuGame() {
   );
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [mistakes, setMistakes] = useState(0);
+  const [showCompletionOverlay, setShowCompletionOverlay] = useState(false);
 
   const completedNumbers = new Set<number>(
     activePuzzle
@@ -289,6 +290,7 @@ export default function SudokuGame() {
     setSelectedCell(null);
     setElapsedSeconds(0);
     setMistakes(0);
+    setShowCompletionOverlay(false);
     setMessage(
       `Ready to begin a ${selectedDifficulty} puzzle. Press Play.`
     );
@@ -304,6 +306,7 @@ export default function SudokuGame() {
     setSelectedCell(null);
     setElapsedSeconds(0);
     setMistakes(0);
+    setShowCompletionOverlay(false);
     setGameStatus("playing");
     setMessage("Select an empty square and choose a number.");
   }
@@ -317,6 +320,7 @@ export default function SudokuGame() {
     setSelectedCell(null);
     setElapsedSeconds(0);
     setMistakes(0);
+    setShowCompletionOverlay(false);
     setGameStatus("playing");
     setMessage("Puzzle reset. Select an empty square to continue.");
   }
@@ -362,6 +366,7 @@ export default function SudokuGame() {
 
       if (isPuzzleComplete(updatedGrid, activePuzzle.solution)) {
         setGameStatus("completed");
+        setShowCompletionOverlay(true);
         setMessage(`Completed! You solved the ${difficulty} puzzle.`);
         return;
       }
@@ -558,6 +563,41 @@ export default function SudokuGame() {
                   Play
                 </span>
               </button>
+            </div>
+          )}
+
+          {gameStatus === "completed" && showCompletionOverlay && (
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-neutral-400/45 px-6 text-center">
+              <div className="rounded-3xl border border-neutral-700 bg-neutral-950/95 p-6 shadow-2xl">
+                <p className="text-sm uppercase tracking-[0.25em] text-cyan-300">
+                  Completed
+                </p>
+
+                <h2 className="mt-3 text-3xl font-bold text-white">
+                  Puzzle Solved!
+                </h2>
+
+                <p className="mt-3 text-sm leading-6 text-neutral-300">
+                  {difficulty} · {formatTime(elapsedSeconds)} · Mistakes{" "}
+                  {mistakes}
+                </p>
+
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                  <button
+                    onClick={() => setShowCompletionOverlay(false)}
+                    className="rounded-full border border-neutral-600 px-5 py-2.5 text-sm font-medium text-neutral-200 transition hover:border-neutral-300 hover:text-white active:scale-[0.98]"
+                  >
+                    See Board
+                  </button>
+
+                  <button
+                    onClick={() => preparePuzzle(difficulty)}
+                    className="rounded-full bg-linear-to-r from-blue-500 via-blue-600 to-blue-700 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-blue-500/40 transition hover:bg-linear-to-br focus:outline-none focus:ring-2 focus:ring-blue-300 active:scale-[0.98]"
+                  >
+                    Play Again
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>
