@@ -412,18 +412,18 @@ export default function SudokuGame() {
     <div className="mt-8 rounded-3xl border border-neutral-800 bg-neutral-950 p-3 sm:mt-12 sm:p-8">
       <div>
         <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
-          <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
-            <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">
+          <div className="rounded-2xl border border-cyan-900/50 bg-linear-to-br from-neutral-900 to-cyan-950/35 p-5">
+            <p className="text-sm uppercase tracking-[0.2em] text-cyan-300">
               Puzzle Status
             </p>
 
             <p className="mt-3 text-lg font-medium text-white">{message}</p>
           </div>
 
-          <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+          <div className="rounded-2xl border border-blue-900/50 bg-linear-to-br from-neutral-900 to-blue-950/35 p-5">
             <label
               htmlFor="difficulty"
-              className="text-sm uppercase tracking-[0.2em] text-neutral-500"
+              className="text-sm uppercase tracking-[0.2em] text-blue-300"
             >
               Difficulty
             </label>
@@ -444,8 +444,8 @@ export default function SudokuGame() {
         </div>
 
         <div className="mt-4 grid grid-cols-3 gap-3">
-          <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-4 text-center">
-            <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">
+          <div className="rounded-2xl border border-cyan-900/50 bg-linear-to-br from-neutral-900 to-cyan-950/30 p-4 text-center">
+            <p className="text-xs uppercase tracking-[0.2em] text-cyan-300">
               Time
             </p>
             <p className="mt-2 text-xl font-semibold text-white">
@@ -453,15 +453,15 @@ export default function SudokuGame() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-4 text-center">
-            <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">
+          <div className="rounded-2xl border border-red-900/50 bg-linear-to-br from-neutral-900 to-red-950/25 p-4 text-center">
+            <p className="text-xs uppercase tracking-[0.2em] text-red-300">
               Mistakes
             </p>
-            <p className="mt-2 text-xl font-semibold text-white">{mistakes}</p>
+            <p className="mt-2 text-xl font-semibold text-red-200">{mistakes}</p>
           </div>
 
-          <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-4 text-center">
-            <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">
+          <div className="rounded-2xl border border-indigo-900/50 bg-linear-to-br from-neutral-900 to-indigo-950/30 p-4 text-center">
+            <p className="text-xs uppercase tracking-[0.2em] text-indigo-300">
               Clues
             </p>
             <p className="mt-2 text-xl font-semibold text-white">
@@ -602,8 +602,8 @@ export default function SudokuGame() {
           )}
         </div>
 
-        <div className="flex w-full max-w-108 flex-col rounded-2xl border border-neutral-800 bg-neutral-900 p-5 xl:h-108">
-          <p className="text-sm uppercase tracking-[0.2em] text-neutral-500">
+        <div className="flex w-full max-w-108 flex-col rounded-2xl border border-cyan-900/50 bg-linear-to-br from-neutral-900 to-cyan-950/25 p-5 xl:h-108">
+          <p className="text-sm uppercase tracking-[0.2em] text-cyan-300">
             Number Pad
           </p>
 

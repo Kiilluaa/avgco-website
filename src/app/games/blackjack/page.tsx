@@ -24,9 +24,7 @@ export default function BlackjackPage() {
               </h1>
 
               <p className="mt-5 max-w-2xl text-lg leading-8 text-neutral-400">
-                Classic three deck blackjack. The playable game,
-                player statistics, and saved progress will be added here as
-                development continues.
+                Classic three deck blackjack
               </p>
             </div>
 
