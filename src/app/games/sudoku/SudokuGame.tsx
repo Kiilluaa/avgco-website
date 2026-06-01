@@ -347,7 +347,6 @@ export default function SudokuGame() {
 
     setGrid(copyGrid(activePuzzle.startingGrid));
     setSelectedCell(null);
-    setElapsedSeconds(0);
     setMistakes(0);
     setShowCompletionOverlay(false);
     setGameStatus("playing");
