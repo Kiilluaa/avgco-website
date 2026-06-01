@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { supabase } from "../lib/supabaseClient";
 
 export default function AccountPage() {
-  const [email, setEmail] = useState("");
+  const [loginUsername, setLoginUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
 
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [profileUsername, setProfileUsername] = useState<string | null>(null);
-  const [message, setMessage] = useState("Sign in or create an account.");
+  const [message, setMessage] = useState("Sign in to your AVGCO account.");
   const [loading, setLoading] = useState(false);
 
   async function loadProfile(userId: string) {
@@ -21,7 +21,7 @@ export default function AccountPage() {
       .single();
 
     if (error) {
-      setProfileUsername(null);
+      setProfileUsername("Profile not found");
       return;
     }
 
@@ -62,60 +62,37 @@ export default function AccountPage() {
     };
   }, []);
 
-  async function signUp() {
-    const cleanUsername = username.trim().toLowerCase();
-
-    if (!cleanUsername) {
-      setMessage("Please choose a username.");
-      return;
-    }
-
-    if (cleanUsername.length < 3) {
-      setMessage("Username must be at least 3 characters.");
-      return;
-    }
-
-    if (!/^[a-z0-9_]+$/.test(cleanUsername)) {
-      setMessage("Username can only use lowercase letters, numbers, and underscores.");
-      return;
-    }
-
-    setLoading(true);
-    setMessage("Creating account...");
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/account`,
-        data: {
-          username: cleanUsername,
-        },
-      },
-    });
-
-    if (error) {
-      setMessage(error.message);
-    } else {
-      setMessage("Account created. Check your email to confirm your account.");
-      setUsername("");
-      setPassword("");
-    }
-
-    setLoading(false);
-  }
-
   async function signIn() {
+    const cleanUsername = loginUsername.trim().toLowerCase();
+
+    if (!cleanUsername || !password) {
+      setMessage("Enter your username and password.");
+      return;
+    }
+
     setLoading(true);
     setMessage("Signing in...");
 
+    const { data: lookupData, error: lookupError } = await supabase.rpc(
+      "get_email_for_username",
+      {
+        input_username: cleanUsername,
+      }
+    );
+
+    if (lookupError || !lookupData) {
+      setMessage("Invalid username or password.");
+      setLoading(false);
+      return;
+    }
+
     const { error } = await supabase.auth.signInWithPassword({
-      email,
+      email: lookupData,
       password,
     });
 
     if (error) {
-      setMessage(error.message);
+      setMessage("Invalid username or password.");
     } else {
       setMessage("Signed in successfully.");
     }
@@ -132,9 +109,8 @@ export default function AccountPage() {
       setMessage(error.message);
     } else {
       setMessage("Signed out successfully.");
-      setEmail("");
+      setLoginUsername("");
       setPassword("");
-      setUsername("");
       setProfileUsername(null);
     }
 
@@ -194,8 +170,7 @@ export default function AccountPage() {
               </h2>
 
               <p className="mt-4 leading-7 text-neutral-400">
-                Use your email and password to sign in, or create a new AVGCO
-                account.
+                Enter your username and password to sign in.
               </p>
 
               <div className="mt-6 space-y-4">
@@ -203,21 +178,10 @@ export default function AccountPage() {
                   <span className="text-sm text-neutral-300">Username</span>
                   <input
                     type="text"
-                    value={username}
-                    onChange={(event) => setUsername(event.target.value)}
+                    value={loginUsername}
+                    onChange={(event) => setLoginUsername(event.target.value)}
                     className="mt-2 w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-white outline-none transition focus:border-blue-400"
                     placeholder="Username"
-                  />
-                </label>
-
-                <label className="block">
-                  <span className="text-sm text-neutral-300">Email</span>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    className="mt-2 w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-white outline-none transition focus:border-blue-400"
-                    placeholder="Email"
                   />
                 </label>
 
@@ -236,19 +200,18 @@ export default function AccountPage() {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <button
                   onClick={signIn}
-                  disabled={loading || !email || !password}
+                  disabled={loading || !loginUsername || !password}
                   className="rounded-full bg-linear-to-r from-blue-500 via-blue-600 to-blue-700 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-blue-500/40 transition hover:bg-linear-to-br active:scale-[0.98] disabled:cursor-not-allowed disabled:from-neutral-700 disabled:via-neutral-700 disabled:to-neutral-700 disabled:text-neutral-400 disabled:shadow-none"
                 >
                   Sign In
                 </button>
 
-                <button
-                  onClick={signUp}
-                  disabled={loading || !email || !password || !username}
-                  className="rounded-full border border-blue-500/60 bg-blue-500/10 px-5 py-2.5 text-sm font-medium text-blue-200 transition hover:border-blue-400 hover:bg-blue-500/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:border-neutral-700 disabled:text-neutral-500 disabled:opacity-60"
+                <Link
+                  href="/account/create"
+                  className="rounded-full border border-blue-500/60 bg-blue-500/10 px-5 py-2.5 text-center text-sm font-medium text-blue-200 transition hover:border-blue-400 hover:bg-blue-500/20 active:scale-[0.98]"
                 >
                   Create Account
-                </button>
+                </Link>
               </div>
             </>
           )}
