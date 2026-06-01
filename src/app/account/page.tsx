@@ -6,10 +6,27 @@ import { supabase } from "../lib/supabaseClient";
 export default function AccountPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
 
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [profileUsername, setProfileUsername] = useState<string | null>(null);
   const [message, setMessage] = useState("Sign in or create an account.");
   const [loading, setLoading] = useState(false);
+
+  async function loadProfile(userId: string) {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("username")
+      .eq("id", userId)
+      .single();
+
+    if (error) {
+      setProfileUsername(null);
+      return;
+    }
+
+    setProfileUsername(data.username);
+  }
 
   useEffect(() => {
     async function loadSession() {
@@ -18,6 +35,12 @@ export default function AccountPage() {
       } = await supabase.auth.getSession();
 
       setUserEmail(session?.user.email ?? null);
+
+      if (session?.user.id) {
+        loadProfile(session.user.id);
+      } else {
+        setProfileUsername(null);
+      }
     }
 
     loadSession();
@@ -26,6 +49,12 @@ export default function AccountPage() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUserEmail(session?.user.email ?? null);
+
+      if (session?.user.id) {
+        loadProfile(session.user.id);
+      } else {
+        setProfileUsername(null);
+      }
     });
 
     return () => {
@@ -34,23 +63,43 @@ export default function AccountPage() {
   }, []);
 
   async function signUp() {
+    const cleanUsername = username.trim().toLowerCase();
+
+    if (!cleanUsername) {
+      setMessage("Please choose a username.");
+      return;
+    }
+
+    if (cleanUsername.length < 3) {
+      setMessage("Username must be at least 3 characters.");
+      return;
+    }
+
+    if (!/^[a-z0-9_]+$/.test(cleanUsername)) {
+      setMessage("Username can only use lowercase letters, numbers, and underscores.");
+      return;
+    }
+
     setLoading(true);
     setMessage("Creating account...");
 
     const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-            emailRedirectTo: `${window.location.origin}/account`,
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/account`,
+        data: {
+          username: cleanUsername,
         },
+      },
     });
 
     if (error) {
       setMessage(error.message);
     } else {
-      setMessage(
-        "Account created. Check your email if confirmation is required."
-      );
+      setMessage("Account created. Check your email to confirm your account.");
+      setUsername("");
+      setPassword("");
     }
 
     setLoading(false);
@@ -85,6 +134,8 @@ export default function AccountPage() {
       setMessage("Signed out successfully.");
       setEmail("");
       setPassword("");
+      setUsername("");
+      setProfileUsername(null);
     }
 
     setLoading(false);
@@ -113,13 +164,15 @@ export default function AccountPage() {
                 Signed In
               </p>
 
-              <h2 className="mt-4 text-2xl font-semibold">
-                Welcome back
-              </h2>
+              <h2 className="mt-4 text-2xl font-semibold">Welcome back</h2>
 
               <p className="mt-4 leading-7 text-neutral-400">
-                You are signed in as{" "}
-                <span className="font-medium text-white">{userEmail}</span>.
+                Username:{" "}
+                <span className="font-medium text-white">
+                  {profileUsername ?? "Loading..."}
+                </span>
+                <br />
+                Email: <span className="font-medium text-white">{userEmail}</span>
               </p>
 
               <button
@@ -146,6 +199,17 @@ export default function AccountPage() {
               </p>
 
               <div className="mt-6 space-y-4">
+                <label className="block">
+                  <span className="text-sm text-neutral-300">Username</span>
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(event) => setUsername(event.target.value)}
+                    className="mt-2 w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-white outline-none transition focus:border-blue-400"
+                    placeholder="avgco_player"
+                  />
+                </label>
+
                 <label className="block">
                   <span className="text-sm text-neutral-300">Email</span>
                   <input
@@ -180,7 +244,7 @@ export default function AccountPage() {
 
                 <button
                   onClick={signUp}
-                  disabled={loading || !email || !password}
+                  disabled={loading || !email || !password || !username}
                   className="rounded-full border border-blue-500/60 bg-blue-500/10 px-5 py-2.5 text-sm font-medium text-blue-200 transition hover:border-blue-400 hover:bg-blue-500/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:border-neutral-700 disabled:text-neutral-500 disabled:opacity-60"
                 >
                   Create Account
