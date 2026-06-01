@@ -217,7 +217,7 @@ export default function AccountPage() {
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
                     className="mt-2 w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-white outline-none transition focus:border-blue-400"
-                    placeholder="you@example.com"
+                    placeholder="Email"
                   />
                 </label>
 
@@ -228,7 +228,7 @@ export default function AccountPage() {
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     className="mt-2 w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-white outline-none transition focus:border-blue-400"
-                    placeholder="••••••••"
+                    placeholder="Password"
                   />
                 </label>
               </div>
