@@ -29,6 +29,12 @@ export default function AccountPage() {
   }
 
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if (urlParams.get("created") === "1") {
+      setMessage("Account created. Check your email to confirm your account.");
+    }
+
     async function loadSession() {
       const {
         data: { session },
@@ -73,21 +79,21 @@ export default function AccountPage() {
     setLoading(true);
     setMessage("Signing in...");
 
-    const { data: lookupData, error: lookupError } = await supabase.rpc(
+    const { data: emailForUsername, error: lookupError } = await supabase.rpc(
       "get_email_for_username",
       {
         input_username: cleanUsername,
       }
     );
 
-    if (lookupError || !lookupData) {
+    if (lookupError || !emailForUsername) {
       setMessage("Invalid username or password.");
       setLoading(false);
       return;
     }
 
     const { error } = await supabase.auth.signInWithPassword({
-      email: lookupData,
+      email: emailForUsername,
       password,
     });
 
@@ -95,6 +101,7 @@ export default function AccountPage() {
       setMessage("Invalid username or password.");
     } else {
       setMessage("Signed in successfully.");
+      setPassword("");
     }
 
     setLoading(false);
@@ -148,7 +155,8 @@ export default function AccountPage() {
                   {profileUsername ?? "Loading..."}
                 </span>
                 <br />
-                Email: <span className="font-medium text-white">{userEmail}</span>
+                Email:{" "}
+                <span className="font-medium text-white">{userEmail}</span>
               </p>
 
               <button

@@ -2,9 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabaseClient";
 
 export default function CreateAccountPage() {
+  const router = useRouter();
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,11 +29,32 @@ export default function CreateAccountPage() {
     }
 
     if (!/^[a-z0-9_]+$/.test(cleanUsername)) {
-      setMessage("Username can only use lowercase letters, numbers, and underscores.");
+      setMessage(
+        "Username can only use lowercase letters, numbers, and underscores."
+      );
       return;
     }
 
     setLoading(true);
+    setMessage("Checking username...");
+
+    const { data: usernameAvailable, error: usernameError } =
+      await supabase.rpc("is_username_available", {
+        input_username: cleanUsername,
+      });
+
+    if (usernameError) {
+      setMessage(usernameError.message);
+      setLoading(false);
+      return;
+    }
+
+    if (!usernameAvailable) {
+      setMessage("That username is already taken.");
+      setLoading(false);
+      return;
+    }
+
     setMessage("Creating account...");
 
     const { error } = await supabase.auth.signUp({
@@ -46,14 +70,11 @@ export default function CreateAccountPage() {
 
     if (error) {
       setMessage(error.message);
-    } else {
-      setMessage("Account created. Check your email to confirm your account.");
-      setUsername("");
-      setEmail("");
-      setPassword("");
+      setLoading(false);
+      return;
     }
 
-    setLoading(false);
+    router.push("/account?created=1");
   }
 
   return (
@@ -105,7 +126,7 @@ export default function CreateAccountPage() {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 className="mt-2 w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-white outline-none transition focus:border-blue-400"
-                placeholder="Email"
+                placeholder="you@example.com"
               />
             </label>
 
