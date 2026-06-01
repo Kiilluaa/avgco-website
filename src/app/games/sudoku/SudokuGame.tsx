@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { supabase } from "../../lib/supabaseClient";
 
 type Difficulty = "Easy" | "Medium" | "Hard";
 type GameStatus = "ready" | "playing" | "completed";
@@ -263,6 +264,7 @@ export default function SudokuGame() {
   );
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [mistakes, setMistakes] = useState(0);
+  const [saveMessage, setSaveMessage] = useState("");
   const [showCompletionOverlay, setShowCompletionOverlay] = useState(false);
 
   const completedNumbers = new Set<number>(
@@ -282,6 +284,31 @@ export default function SudokuGame() {
     activePuzzle !== null &&
     activePuzzle.startingGrid[selectedCell[0]][selectedCell[1]] === 0;
 
+  async function saveSudokuCompletion(finalTime: number, finalMistakes: number) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      setSaveMessage("Sign in to save your Sudoku results.");
+      return;
+    }
+
+    const { error } = await supabase.from("sudoku_completions").insert({
+      user_id: user.id,
+      difficulty,
+      elapsed_seconds: finalTime,
+      mistakes: finalMistakes,
+    });
+
+    if (error) {
+      setSaveMessage("Puzzle completed, but the result could not be saved.");
+      return;
+    }
+
+    setSaveMessage("Result saved.");
+  }
+
   function preparePuzzle(selectedDifficulty: Difficulty) {
     setDifficulty(selectedDifficulty);
     setGameStatus("ready");
@@ -291,6 +318,7 @@ export default function SudokuGame() {
     setElapsedSeconds(0);
     setMistakes(0);
     setShowCompletionOverlay(false);
+    setSaveMessage("");
     setMessage(
       `Ready to begin a ${selectedDifficulty} puzzle. Press Play.`
     );
@@ -308,6 +336,7 @@ export default function SudokuGame() {
     setMistakes(0);
     setShowCompletionOverlay(false);
     setGameStatus("playing");
+    setSaveMessage("");
     setMessage("Select an empty square and choose a number.");
   }
 
@@ -322,6 +351,7 @@ export default function SudokuGame() {
     setMistakes(0);
     setShowCompletionOverlay(false);
     setGameStatus("playing");
+    setSaveMessage("");
     setMessage("Puzzle reset. Select an empty square to continue.");
   }
 
@@ -368,6 +398,7 @@ export default function SudokuGame() {
         setGameStatus("completed");
         setShowCompletionOverlay(true);
         setMessage(`Completed! You solved the ${difficulty} puzzle.`);
+        void saveSudokuCompletion(elapsedSeconds, mistakes);
         return;
       }
 
@@ -581,6 +612,10 @@ export default function SudokuGame() {
                   {difficulty} · {formatTime(elapsedSeconds)} · Mistakes{" "}
                   {mistakes}
                 </p>
+
+                {saveMessage && (
+                  <p className="mt-3 text-sm text-neutral-400">{saveMessage}</p>
+                )}
 
                 <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                   <button
