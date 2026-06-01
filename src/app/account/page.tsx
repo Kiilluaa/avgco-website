@@ -206,7 +206,7 @@ export default function AccountPage() {
                     value={username}
                     onChange={(event) => setUsername(event.target.value)}
                     className="mt-2 w-full rounded-xl border border-neutral-700 bg-neutral-950 px-4 py-3 text-white outline-none transition focus:border-blue-400"
-                    placeholder="avgco_player"
+                    placeholder="Username"
                   />
                 </label>
 
