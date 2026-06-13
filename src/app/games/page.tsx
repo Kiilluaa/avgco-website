@@ -5,7 +5,7 @@ export default function GamesPage() {
     <main className="flex-1 bg-neutral-950 text-white">
         <section className="mx-auto max-w-6xl px-6 py-20">
             <p className="text-sm uppercase tracking-[0.25em] text-neutral-500">Games</p>
-            <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">Play the Average Company Games</h1>
+            <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">Play The Average Company Games</h1>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-neutral-400">Explore original browser games as they are released.</p>
             <div className="mt-12 grid gap-6 md:grid-cols-2">
                 <article className="flex h-full flex-col rounded-3xl border border-neutral-800 bg-neutral-900 p-7">
