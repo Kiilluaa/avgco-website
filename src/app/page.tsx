@@ -29,48 +29,6 @@ export default function Home() {
           </button>
         </div>
       </section>
-
-      <section className="mx-auto max-w-6xl px-6 pb-24">
-        <div className="mb-10 flex items-end justify-between">
-          <div>
-            <p className="text-sm uppercase tracking-[0.25em] text-neutral-500">
-              Platform
-            </p>
-            <h3 className="mt-3 text-3xl font-semibold">
-              What is being built
-            </h3>
-          </div>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-3">
-          <article className="rounded-3xl border border-neutral-800 bg-neutral-900 p-7">
-            <p className="mb-4 text-sm text-neutral-500">01</p>
-            <h4 className="text-xl font-semibold">Games Library</h4>
-            <p className="mt-4 leading-7 text-neutral-400">
-              A growing collection of playable browser games, beginning with
-              smaller games and expanding into 2D story experiences.
-            </p>
-          </article>
-
-          <article className="rounded-3xl border border-neutral-800 bg-neutral-900 p-7">
-            <p className="mb-4 text-sm text-neutral-500">02</p>
-            <h4 className="text-xl font-semibold">Player Accounts</h4>
-            <p className="mt-4 leading-7 text-neutral-400">
-              Accounts will allow players to keep progress, achievements, and
-              game-specific save data across the platform.
-            </p>
-          </article>
-
-          <article className="rounded-3xl border border-neutral-800 bg-neutral-900 p-7">
-            <p className="mb-4 text-sm text-neutral-500">03</p>
-            <h4 className="text-xl font-semibold">New Releases</h4>
-            <p className="mt-4 leading-7 text-neutral-400">
-              A future space for THEAVGCO clothing, releases, and other products
-              connected to the brand.
-            </p>
-          </article>
-        </div>
-      </section>
     </main>
   );
 }
