@@ -75,6 +75,9 @@ export default function CrosswordGame() {
     const [message, setMessage] = useState("Loading weekly crossword...");
     const [showCompletionOverlay, setShowCompletionOverlay] = useState(false);
 
+    const rowCount = puzzle?.solution_data.length ?? 0;
+	const columnCount = puzzle?.solution_data[0]?.length ?? 0;
+
     const startNumbers = useMemo(() => {
         if (!puzzle) {
             return {};
@@ -104,21 +107,21 @@ export default function CrosswordGame() {
     }, []);
 
     function isPlayableCell(row: number, col: number) {
-        if (!puzzle) {
-            return false;
-        }
+		if (!puzzle) {
+			return false;
+		}
 
-        if (
-            row < 0 ||
-            col < 0 ||
-            row >= puzzle.grid_size ||
-            col >= puzzle.grid_size
-        ) {
-            return false;
-        }
+		if (
+			row < 0 ||
+			col < 0 ||
+			row >= rowCount ||
+			col >= columnCount
+		) {
+			return false;
+		}
 
-        return Boolean(puzzle.solution_data[row][col]);
-    }
+		return Boolean(puzzle.solution_data[row][col]);
+	}
 
     function focusCell(row: number, col: number) {
         const input = document.getElementById(getInputId(row, col));
@@ -440,28 +443,28 @@ export default function CrosswordGame() {
     }
 
     function isPuzzleCorrect() {
-        if (!puzzle) {
-            return false;
-        }
+		if (!puzzle) {
+			return false;
+		}
 
-        for (let row = 0; row < puzzle.grid_size; row += 1) {
-            for (let col = 0; col < puzzle.grid_size; col += 1) {
-                const solutionLetter = puzzle.solution_data[row][col];
+		for (let row = 0; row < rowCount; row += 1) {
+			for (let col = 0; col < columnCount; col += 1) {
+				const solutionLetter = puzzle.solution_data[row][col];
 
-                if (!solutionLetter) {
-                    continue;
-                }
+				if (!solutionLetter) {
+					continue;
+				}
 
-                const userLetter = filledGrid[getCellKey(row, col)];
+				const userLetter = filledGrid[getCellKey(row, col)];
 
-                if (userLetter !== solutionLetter) {
-                    return false;
-                }
-            }
-        }
+				if (userLetter !== solutionLetter) {
+					return false;
+				}
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 
     async function finishPuzzle() {
         if (!puzzle || !attempt || !userId) {
@@ -615,7 +618,7 @@ export default function CrosswordGame() {
                         <div
                             className="mx-auto grid max-w-115 overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900"
                             style={{
-                                gridTemplateColumns: `repeat(${puzzle.grid_size}, minmax(0, 1fr))`,
+                                gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`,
                             }}
                         >
                             {puzzle.solution_data.map((row, rowIndex) =>
