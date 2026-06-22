@@ -11,7 +11,8 @@
 		"upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
 		"preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
 		"cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
-		"crossword:publish": "tsx src/app/scripts/publish-weekly-crossword.ts"
+		"crossword:test-source": "tsx src/app/scripts/test-crossword-source.ts",
+		"crossword:publish": "tsx --env-file=.env.local src/app/scripts/publish-weekly-crossword.ts"
 	},
 	"dependencies": {
 		"@opennextjs/cloudflare": "^1.19.9",

@@ -318,6 +318,14 @@ export default function CrosswordGame() {
         if (/^[a-zA-Z]$/.test(event.key) && filledGrid[key]) {
             event.preventDefault();
 
+            const nextFilledGrid = {
+                ...filledGrid,
+                [key]: event.key.toUpperCase(),
+            };
+
+            setFilledGrid(nextFilledGrid);
+            saveProgress(nextFilledGrid);
+
             const bestDirection = getBestDirection(row, col, activeDirection);
             setActiveDirection(bestDirection);
 
@@ -328,28 +336,7 @@ export default function CrosswordGame() {
                 return;
             }
 
-            const nextKey = getCellKey(nextCell.row, nextCell.col);
-
-            const nextFilledGrid = {
-                ...filledGrid,
-                [nextKey]: event.key.toUpperCase(),
-            };
-
-            setFilledGrid(nextFilledGrid);
-            saveProgress(nextFilledGrid);
-
-            const afterNextCell = findAdjacentCell(
-                nextCell.row,
-                nextCell.col,
-                bestDirection,
-                1
-            );
-
-            if (afterNextCell) {
-                focusCell(afterNextCell.row, afterNextCell.col);
-            } else {
-                blurActiveCell();
-            }
+            focusCell(nextCell.row, nextCell.col);
 
             return;
         }
@@ -410,10 +397,15 @@ export default function CrosswordGame() {
             event.preventDefault();
 
             const nextFilledGrid = { ...filledGrid };
-            delete nextFilledGrid[key];
 
-            setFilledGrid(nextFilledGrid);
-            saveProgress(nextFilledGrid);
+            if (nextFilledGrid[key]) {
+                delete nextFilledGrid[key];
+
+                setFilledGrid(nextFilledGrid);
+                saveProgress(nextFilledGrid);
+                focusCell(row, col);
+                return;
+            }
 
             const previousCell = findAdjacentCell(
                 row,
@@ -422,11 +414,21 @@ export default function CrosswordGame() {
                 -1
             );
 
-            if (previousCell) {
-                focusCell(previousCell.row, previousCell.col);
-            } else {
-                blurActiveCell();
+            if (!previousCell) {
+                focusCell(row, col);
+                return;
             }
+
+            const previousKey = getCellKey(
+                previousCell.row,
+                previousCell.col
+            );
+
+            delete nextFilledGrid[previousKey];
+
+            setFilledGrid(nextFilledGrid);
+            saveProgress(nextFilledGrid);
+            focusCell(previousCell.row, previousCell.col);
 
             return;
         }
