@@ -58,7 +58,14 @@ function getInputId(row: number, col: number) {
 }
 
 function getTodayDateString() {
-    return new Date().toISOString().slice(0, 10);
+    const pacificDate = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "America/Los_Angeles",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+    }).format(new Date());
+
+    return pacificDate;
 }
 
 export default function CrosswordGame() {
