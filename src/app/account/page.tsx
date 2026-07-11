@@ -603,7 +603,7 @@ export default function AccountPage() {
                         </h2>
 
                         <div className="mt-8 grid gap-6 xl:grid-cols-2">
-                            <div className="rounded-3xl border border-cyan-900/50 bg-linear-to-br from-neutral-900 to-cyan-950/25 p-7">
+                            <div className="flex flex-col rounded-3xl border border-cyan-900/50 bg-linear-to-br from-neutral-900 to-cyan-950/25 p-7 xl:h-156">
                                 <p className="text-sm uppercase tracking-[0.2em] text-cyan-300">
                                     Sudoku Stats
                                 </p>
@@ -621,6 +621,7 @@ export default function AccountPage() {
                                     <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">
                                         Total Completed
                                     </p>
+
                                     <p className="mt-2 text-3xl font-bold text-white">
                                         {sudokuStats.totalCompleted}
                                     </p>
@@ -629,31 +630,21 @@ export default function AccountPage() {
                                         <p className="rounded-xl border border-cyan-900/50 bg-cyan-950/20 px-3 py-2 text-cyan-200">
                                             Easy{" "}
                                             <span className="font-semibold text-white">
-                                                {
-                                                    sudokuStats
-                                                        .completedByDifficulty.Easy
-                                                }
+                                                {sudokuStats.completedByDifficulty.Easy}
                                             </span>
                                         </p>
 
                                         <p className="rounded-xl border border-blue-900/50 bg-blue-950/20 px-3 py-2 text-blue-200">
                                             Medium{" "}
                                             <span className="font-semibold text-white">
-                                                {
-                                                    sudokuStats
-                                                        .completedByDifficulty
-                                                        .Medium
-                                                }
+                                                {sudokuStats.completedByDifficulty.Medium}
                                             </span>
                                         </p>
 
                                         <p className="rounded-xl border border-indigo-900/50 bg-indigo-950/20 px-3 py-2 text-indigo-200">
                                             Hard{" "}
                                             <span className="font-semibold text-white">
-                                                {
-                                                    sudokuStats
-                                                        .completedByDifficulty.Hard
-                                                }
+                                                {sudokuStats.completedByDifficulty.Hard}
                                             </span>
                                         </p>
                                     </div>
@@ -674,21 +665,20 @@ export default function AccountPage() {
 
                                     {renderDifficultyCard("Hard", {
                                         border: "border-indigo-900/50",
-                                        gradient:
-                                            "from-neutral-950 to-indigo-950/25",
+                                        gradient: "from-neutral-950 to-indigo-950/25",
                                         label: "text-indigo-300",
                                     })}
                                 </div>
 
                                 <Link
                                     href="/games/sudoku"
-                                    className="mt-6 inline-flex rounded-full bg-linear-to-r from-blue-500 via-blue-600 to-blue-700 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-blue-500/40 transition hover:bg-linear-to-br active:scale-[0.98]"
+                                    className="mt-auto inline-flex w-fit rounded-full bg-linear-to-r from-blue-500 via-blue-600 to-blue-700 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-blue-500/40 transition hover:bg-linear-to-br active:scale-[0.98]"
                                 >
                                     Play Sudoku
                                 </Link>
                             </div>
 
-                            <div className="rounded-3xl border border-emerald-900/50 bg-linear-to-br from-neutral-900 to-emerald-950/20 p-7">
+                            <div className="flex min-h-0 flex-col rounded-3xl border border-emerald-900/50 bg-linear-to-br from-neutral-900 to-emerald-950/20 p-7 xl:h-156">
                                 <p className="text-sm uppercase tracking-[0.2em] text-emerald-300">
                                     Weekly Games
                                 </p>
@@ -707,6 +697,7 @@ export default function AccountPage() {
                                         <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">
                                             Crosswords Solved
                                         </p>
+
                                         <p className="mt-2 text-3xl font-bold text-white">
                                             {crosswordStats.solved}
                                         </p>
@@ -716,65 +707,55 @@ export default function AccountPage() {
                                         <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">
                                             Current Streak
                                         </p>
+
                                         <p className="mt-2 text-3xl font-bold text-white">
                                             {crosswordStats.currentStreak}
                                         </p>
                                     </div>
                                 </div>
 
-                                <div className="mt-6 rounded-2xl border border-neutral-800 bg-neutral-950 p-5">
-                                    <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">
+                                <div className="mt-6 flex min-h-0 flex-1 flex-col rounded-2xl border border-neutral-800 bg-neutral-950 p-5">
+                                    <p className="shrink-0 text-xs uppercase tracking-[0.2em] text-neutral-500">
                                         Weekly History
                                     </p>
 
                                     {crosswordStats.history.length > 0 ? (
-                                        <div className="mt-4 space-y-3">
-                                            {crosswordStats.history
-                                                .slice(0, 5)
-                                                .map((item) => (
-                                                    <div
-                                                        key={item.weekNumber}
-                                                        className="flex items-center justify-between gap-4 rounded-xl border border-neutral-800 bg-neutral-900/60 px-4 py-3"
-                                                    >
-                                                        <div>
-                                                            <p className="font-medium text-white">
-                                                                Week{" "}
-                                                                {item.weekNumber}
-                                                            </p>
-                                                            <p className="text-sm text-neutral-400">
-                                                                {formatDate(
-                                                                    item.weekStartDate
-                                                                )}{" "}
-                                                                -{" "}
-                                                                {formatDate(
-                                                                    item.weekEndDate
-                                                                )}
-                                                            </p>
-                                                        </div>
+                                        <div className="mt-4 min-h-0 flex-1 space-y-3 overflow-y-auto pr-2">
+                                            {crosswordStats.history.map((item) => (
+                                                <div
+                                                    key={item.weekNumber}
+                                                    className="flex items-center justify-between gap-4 rounded-xl border border-neutral-800 bg-neutral-900/60 px-4 py-3"
+                                                >
+                                                    <div>
+                                                        <p className="font-medium text-white">
+                                                            Week {item.weekNumber}
+                                                        </p>
 
-                                                        <div className="text-right">
-                                                            <p
-                                                                className={`text-sm font-semibold ${
-                                                                    item.status ===
-                                                                    "Solved"
-                                                                        ? "text-emerald-300"
-                                                                        : item.status ===
-                                                                          "Failed"
+                                                        <p className="text-sm text-neutral-400">
+                                                            {formatDate(item.weekStartDate)} -{" "}
+                                                            {formatDate(item.weekEndDate)}
+                                                        </p>
+                                                    </div>
+
+                                                    <div className="text-right">
+                                                        <p
+                                                            className={`text-sm font-semibold ${
+                                                                item.status === "Solved"
+                                                                    ? "text-emerald-300"
+                                                                    : item.status === "Failed"
                                                                         ? "text-red-300"
                                                                         : "text-yellow-300"
-                                                                }`}
-                                                            >
-                                                                {item.status}
-                                                            </p>
-                                                            <p className="text-xs text-neutral-500">
-                                                                {
-                                                                    item.incorrectSubmissions
-                                                                }
-                                                                /5 wrong
-                                                            </p>
-                                                        </div>
+                                                            }`}
+                                                        >
+                                                            {item.status}
+                                                        </p>
+
+                                                        <p className="text-xs text-neutral-500">
+                                                            {item.incorrectSubmissions}/5 wrong
+                                                        </p>
                                                     </div>
-                                                ))}
+                                                </div>
+                                            ))}
                                         </div>
                                     ) : (
                                         <p className="mt-4 text-sm text-neutral-400">
@@ -785,7 +766,7 @@ export default function AccountPage() {
 
                                 <Link
                                     href="/weekly-games/crossword"
-                                    className="mt-6 inline-flex rounded-full bg-linear-to-r from-emerald-500 via-teal-500 to-cyan-500 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-emerald-500/30 transition hover:bg-linear-to-br active:scale-[0.98]"
+                                    className="mt-6 inline-flex w-fit shrink-0 rounded-full bg-linear-to-r from-emerald-500 via-teal-500 to-cyan-500 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-emerald-500/30 transition hover:bg-linear-to-br active:scale-[0.98]"
                                 >
                                     Play Weekly Crossword
                                 </Link>
